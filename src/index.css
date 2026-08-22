@@ -1,0 +1,6 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; }
+input, button { font: inherit; padding: 6px 8px; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
