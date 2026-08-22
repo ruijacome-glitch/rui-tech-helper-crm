@@ -20,6 +20,15 @@ const ESTADOS = ['aberto', 'em_analise', 'em_curso', 'aguarda_cliente', 'aguarda
 const CATEGORIAS = ['hardware', 'software', 'rede', 'backup'];
 const PRIORIDADES = ['urgente', 'normal', 'baixa'];
 
+const SELECT_CLASS =
+  'rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-electric-soft';
+
+const PRIORIDADE_BADGE: Record<string, string> = {
+  urgente: 'bg-destructive/15 text-destructive',
+  normal: 'bg-electric/15 text-electric-soft',
+  baixa: 'bg-muted text-muted-foreground',
+};
+
 export function TicketsListPage() {
   const { user } = useAuth();
   const [estado, setEstado] = useState('');
@@ -40,42 +49,57 @@ export function TicketsListPage() {
 
   return (
     <div>
-      <h1>Tickets</h1>
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
-        <select value={estado} onChange={(e) => setEstado(e.target.value)}>
+      <h1 className="mb-6 text-2xl font-bold text-foreground">Tickets</h1>
+      <div className="mb-6 flex flex-wrap gap-3">
+        <select value={estado} onChange={(e) => setEstado(e.target.value)} className={SELECT_CLASS}>
           <option value="">Todos os estados</option>
           {ESTADOS.map((e) => <option key={e} value={e}>{e}</option>)}
         </select>
-        <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
+        <select value={categoria} onChange={(e) => setCategoria(e.target.value)} className={SELECT_CLASS}>
           <option value="">Todas as categorias</option>
           {CATEGORIAS.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
-        <select value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
+        <select value={prioridade} onChange={(e) => setPrioridade(e.target.value)} className={SELECT_CLASS}>
           <option value="">Todas as prioridades</option>
           {PRIORIDADES.map((p) => <option key={p} value={p}>{p}</option>)}
         </select>
       </div>
 
-      {isLoading && <p>A carregar...</p>}
-      {error && <p role="alert">Erro ao carregar tickets.</p>}
+      {isLoading && <p className="label-tech text-muted-foreground">A carregar...</p>}
+      {error && <p role="alert" className="text-sm text-destructive">Erro ao carregar tickets.</p>}
       {data && (
-        <table>
-          <thead>
-            <tr><th>Título</th><th>Estado</th><th>Categoria</th><th>Prioridade</th></tr>
-          </thead>
-          <tbody>
-            {data.data.map((ticket) => (
-              <tr key={ticket.id}>
-                <td><Link to="/tickets/$ticketId" params={{ ticketId: String(ticket.id) }}>{ticket.titulo}</Link></td>
-                <td>{ticket.estado}</td>
-                <td>{ticket.categoria}</td>
-                <td>{ticket.prioridade}</td>
+        <div className="panel-tech overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-border text-xs text-muted-foreground">
+                <th className="px-4 py-3 font-medium">Título</th>
+                <th className="px-4 py-3 font-medium">Estado</th>
+                <th className="px-4 py-3 font-medium">Categoria</th>
+                <th className="px-4 py-3 font-medium">Prioridade</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.data.map((ticket) => (
+                <tr key={ticket.id} className="border-b border-border last:border-0 hover:bg-secondary/50">
+                  <td className="px-4 py-3">
+                    <Link to="/tickets/$ticketId" params={{ ticketId: String(ticket.id) }} className="font-medium text-electric-soft hover:underline">
+                      {ticket.titulo}
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 text-foreground/80">{ticket.estado}</td>
+                  <td className="px-4 py-3 text-foreground/80">{ticket.categoria}</td>
+                  <td className="px-4 py-3">
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${PRIORIDADE_BADGE[ticket.prioridade] ?? 'bg-muted text-muted-foreground'}`}>
+                      {ticket.prioridade}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-      {data && data.data.length === 0 && <p>Nenhum ticket encontrado.</p>}
+      {data && data.data.length === 0 && <p className="text-sm text-muted-foreground">Nenhum ticket encontrado.</p>}
     </div>
   );
 }

@@ -1,6 +1,109 @@
-* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; }
-input, button { font: inherit; padding: 6px 8px; }
-label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-night: var(--night);
+  --color-night-soft: var(--night-soft);
+  --color-electric: var(--electric);
+  --color-electric-soft: var(--electric-soft);
+  --color-orange: var(--orange);
+  --color-warm: var(--warm);
+  --color-warm-ink: var(--warm-ink);
+  --color-steel: var(--steel);
+  --font-display: "Oswald", "Archivo Narrow", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --night: oklch(0.16 0.045 264);
+  --night-soft: oklch(0.22 0.05 264);
+  --electric: oklch(0.6 0.21 258);
+  --electric-soft: oklch(0.72 0.16 254);
+  --orange: oklch(0.73 0.19 55);
+  --warm: oklch(0.955 0.014 85);
+  --warm-ink: oklch(0.22 0.02 260);
+  --steel: oklch(0.7 0.04 255);
+
+  --background: var(--night);
+  --foreground: oklch(0.96 0.012 85);
+  --card: var(--night-soft);
+  --card-foreground: oklch(0.96 0.012 85);
+  --primary: var(--electric);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.26 0.05 264);
+  --secondary-foreground: oklch(0.96 0.012 85);
+  --muted: oklch(0.26 0.045 264);
+  --muted-foreground: oklch(0.78 0.035 255);
+  --accent: var(--orange);
+  --accent-foreground: oklch(0.16 0.045 264);
+  --destructive: oklch(0.62 0.23 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.35 0.05 258 / 55%);
+  --input: oklch(0.4 0.05 258 / 60%);
+  --ring: var(--electric-soft);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-electric-soft);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-electric);
+    color: #fff;
+  }
+}
+
+@utility label-tech {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+@utility panel-tech {
+  background-color: color-mix(in oklab, var(--color-night-soft) 85%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}

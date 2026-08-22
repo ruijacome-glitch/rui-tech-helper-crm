@@ -25,19 +25,47 @@ export function LoginPage() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center' }}>
-      <form onSubmit={handleSubmit} style={{ width: '320px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <h1>CRM — O Rui dos Computadores</h1>
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="username" />
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <form onSubmit={handleSubmit} className="panel-tech w-full max-w-sm p-8">
+        <p className="text-center text-2xl font-bold uppercase tracking-tight text-foreground" style={{ fontFamily: 'var(--font-display)' }}>CRM</p>
+        <p className="mb-8 text-center text-xs text-muted-foreground">O Rui dos Computadores</p>
+
+        <label className="mb-4 block">
+          <span className="mb-1 block text-sm font-medium text-foreground/90">Email</span>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="username"
+            className="w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-electric-soft"
+          />
         </label>
-        <label>
-          Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+        <label className="mb-6 block">
+          <span className="mb-1 block text-sm font-medium text-foreground/90">Password</span>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+            className="w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-electric-soft"
+          />
         </label>
-        {error && <p role="alert" style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={submitting}>{submitting ? 'A entrar...' : 'Entrar'}</button>
+
+        {error && (
+          <p role="alert" className="mb-4 rounded-md bg-destructive/15 px-3 py-2 text-sm text-destructive">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full cursor-pointer rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {submitting ? 'A entrar...' : 'Entrar'}
+        </button>
       </form>
     </div>
   );
