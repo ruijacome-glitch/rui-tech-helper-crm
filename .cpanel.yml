@@ -1,0 +1,10 @@
+# DEPLOYPATH is the crm.oruidoscomputadores.pt subdomain document root
+# (confirmed via cPanel list_subdomains: /home/mercadom/crm). This copies
+# the locally-built dist/ (committed to git, see README "Deploy") into it.
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/mercadom/crm/
+    - /bin/mkdir -p $DEPLOYPATH
+    - tar --exclude='.git' -cf - -C dist . | (cd $DEPLOYPATH && tar -xf -)
+    - /bin/chmod 755 $DEPLOYPATH
