@@ -1,6 +1,7 @@
 import { Outlet, Link, useNavigate, useRouterState } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useAuth } from '@/lib/auth';
+import { LogoMark, Wordmark } from '@/components/brand/Brand';
 
 const CONTEUDO_SITE_URL = `${import.meta.env.VITE_API_URL}/admin/conteudo`;
 
@@ -33,8 +34,11 @@ export function RootLayout() {
     <div className="flex min-h-screen bg-background">
       <aside className="flex w-60 flex-col justify-between border-r border-border bg-night-soft px-4 py-6">
         <div>
-          <p className="px-3 text-lg font-bold uppercase tracking-tight text-foreground" style={{ fontFamily: 'var(--font-display)' }}>CRM</p>
-          <p className="mb-6 px-3 text-xs text-muted-foreground">O Rui dos Computadores</p>
+          <div className="mb-1 flex items-center gap-3 px-3">
+            <LogoMark />
+            <Wordmark />
+          </div>
+          <p className="label-tech mb-6 px-3 text-muted-foreground">Backoffice</p>
 
           <nav className="flex flex-col gap-1">
             <Link to="/tickets" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>

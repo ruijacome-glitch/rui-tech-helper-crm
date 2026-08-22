@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useAuth, isInvalidCredentials } from '@/lib/auth';
+import { LogoMark, Wordmark } from '@/components/brand/Brand';
 
 export function LoginPage() {
   const { login } = useAuth();
@@ -27,8 +28,11 @@ export function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <form onSubmit={handleSubmit} className="panel-tech w-full max-w-sm p-8">
-        <p className="text-center text-2xl font-bold uppercase tracking-tight text-foreground" style={{ fontFamily: 'var(--font-display)' }}>CRM</p>
-        <p className="mb-8 text-center text-xs text-muted-foreground">O Rui dos Computadores</p>
+        <div className="mb-8 flex flex-col items-center gap-3">
+          <LogoMark className="size-14" />
+          <Wordmark className="text-center" />
+          <p className="label-tech text-muted-foreground">Backoffice</p>
+        </div>
 
         <label className="mb-4 block">
           <span className="mb-1 block text-sm font-medium text-foreground/90">Email</span>
