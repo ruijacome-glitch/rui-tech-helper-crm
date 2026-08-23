@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/apiClient';
+import { TableSkeleton, EmptyState, CIRCLE_ALERT_ICON_PATH } from '@/components/table/TableParts';
 
 type PagamentoRow = {
   id: number;
@@ -20,31 +21,6 @@ const ESTADO_BADGE: Record<string, string> = {
   expirado: 'bg-muted text-muted-foreground',
   cancelado: 'bg-destructive/15 text-destructive',
 };
-
-function TableSkeleton({ cols }: { cols: number }) {
-  return (
-    <div className="panel-tech overflow-hidden">
-      {Array.from({ length: 5 }).map((_, row) => (
-        <div key={row} className="flex gap-6 border-b border-border px-4 py-3.5 last:border-0">
-          {Array.from({ length: cols }).map((_, col) => (
-            <div key={col} className="h-4 flex-1 animate-pulse rounded bg-secondary" />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="panel-tech flex flex-col items-center gap-2 px-6 py-16 text-center">
-      <svg viewBox="0 0 24 24" className="size-10 text-muted-foreground" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-      </svg>
-      <p className="text-sm text-muted-foreground">{message}</p>
-    </div>
-  );
-}
 
 export function PagamentosListPage() {
   const [estado, setEstado] = useState('');
@@ -75,7 +51,7 @@ export function PagamentosListPage() {
 
       {isLoading && <TableSkeleton cols={5} />}
       {error && <p role="alert" className="text-sm text-destructive">Erro ao carregar pagamentos.</p>}
-      {data && data.data.length === 0 && <EmptyState message="Nenhum pagamento encontrado." />}
+      {data && data.data.length === 0 && <EmptyState message="Nenhum pagamento encontrado." iconPath={CIRCLE_ALERT_ICON_PATH} />}
       {data && data.data.length > 0 && (
         <div className="panel-tech overflow-x-auto">
           <table className="w-full text-left text-sm">
