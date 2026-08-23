@@ -41,14 +41,48 @@ export function RootLayout() {
           <p className="label-tech mb-6 px-3 text-muted-foreground">Backoffice</p>
 
           <nav className="flex flex-col gap-1">
-            <Link to="/tickets" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
-              Tickets
+            <Link to="/" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Dashboard
             </Link>
+            <Link to="/clientes" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Clientes
+            </Link>
+            <Link to="/tickets" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Intervenções
+            </Link>
+            <Link to="/agendamentos" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Agendamentos
+            </Link>
+            <Link to="/equipamentos" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Equipamentos
+            </Link>
+            {user.role === 'admin' && (
+              <Link to="/faturas" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+                Faturas
+              </Link>
+            )}
             {user.role === 'admin' && (
               <Link to="/pagamentos" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
                 Pagamentos
               </Link>
             )}
+            <Link to="/orcamentos" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Orçamentos
+            </Link>
+            <Link to="/comunicacoes" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Comunicações
+            </Link>
+            <Link to="/documentos" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Documentos
+            </Link>
+            {user.role === 'admin' && (
+              <Link to="/relatorios" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+                Relatórios
+              </Link>
+            )}
+            <Link to="/definicoes" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Definições
+            </Link>
             {user.role === 'admin' && (
               <a href={CONTEUDO_SITE_URL} target="_blank" rel="noreferrer" className={NAV_LINK_CLASS}>
                 Conteúdo site ↗
