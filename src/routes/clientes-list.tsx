@@ -27,6 +27,7 @@ export function ClientesListPage() {
       <h1 className="mb-6 text-2xl font-bold text-foreground">Clientes</h1>
       <input
         type="search"
+        aria-label="Pesquisar clientes"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Pesquisar por nome, email ou telefone..."
