@@ -35,10 +35,14 @@ export function ClienteDetailPage() {
         </p>
       </div>
 
-      <div className="mb-6 flex flex-wrap gap-1 border-b border-border">
+      <div role="tablist" className="mb-6 flex flex-wrap gap-1 border-b border-border">
         {TABS.map((t) => (
           <button
             key={t}
+            role="tab"
+            aria-selected={tab === t}
+            id={`tab-${t}`}
+            aria-controls={`tabpanel-${t}`}
             onClick={() => setTab(t)}
             className={`cursor-pointer border-b-2 px-3 py-2 text-sm font-medium transition-colors ${
               tab === t ? 'border-electric-soft text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -49,6 +53,7 @@ export function ClienteDetailPage() {
         ))}
       </div>
 
+      <div role="tabpanel" id={`tabpanel-${tab}`} aria-labelledby={`tab-${tab}`}>
       {tab === 'Resumo' && (
         <div className="grid grid-cols-3 gap-4">
           <div className="panel-tech p-5">
@@ -128,6 +133,7 @@ export function ClienteDetailPage() {
       {tab === 'Faturas' && <EmptyState message="Módulo em breve." />}
       {tab === 'Documentos' && <EmptyState message="Módulo em breve." />}
       {tab === 'Comunicações' && <EmptyState message="Módulo em breve." />}
+      </div>
     </div>
   );
 }
