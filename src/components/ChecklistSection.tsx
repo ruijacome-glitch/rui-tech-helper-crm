@@ -29,8 +29,8 @@ export function ChecklistSection({
     setError(null);
     try {
       await apiFetch(`${basePath}/tickets/${ticketId}/checklist/${item.item_chave}`, { method: 'PATCH' });
-    } catch (error) {
-      if (error instanceof ApiError && error.status === 409) {
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
         onChanged();
         return;
       }
