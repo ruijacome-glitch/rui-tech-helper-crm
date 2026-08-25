@@ -2,10 +2,17 @@ import { useState } from 'react';
 
 export function TrackingLinkBlock({ trackingToken, clienteNome }: { trackingToken: string; clienteNome: string }) {
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const url = `https://tracking.oruidoscomputadores.pt/t/${trackingToken}`;
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(url);
+    setError(null);
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      setError('Não foi possível copiar o link.');
+      return;
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -30,6 +37,7 @@ export function TrackingLinkBlock({ trackingToken, clienteNome }: { trackingToke
       >
         WhatsApp
       </button>
+      {error && <p role="alert" className="w-full text-xs text-destructive">{error}</p>}
     </div>
   );
 }
