@@ -5,6 +5,23 @@ import { apiFetch } from '@/lib/apiClient';
 import { useAuth } from '@/lib/auth';
 import { OrcamentoForm } from './orcamento-form';
 
+type TicketIssue = {
+  id: number;
+  descricao: string;
+  resultado: 'pendente' | 'resolvido' | 'nao_resolvido';
+  observacao: string | null;
+  resolvido_por: string | null;
+  resolvido_at: string | null;
+};
+
+type ChecklistItem = {
+  item_chave: string;
+  label: string;
+  concluido: boolean;
+  concluido_por: string | null;
+  concluido_at: string | null;
+};
+
 type TicketDetail = {
   id: number;
   titulo: string;
@@ -12,16 +29,27 @@ type TicketDetail = {
   estado: string;
   categoria: string;
   prioridade: string;
+  tracking_token: string;
   cliente: { id: number; nome: string; email: string; telefone: string };
   tecnico: { id: number; name: string } | null;
   eventos: { estado_anterior: string; estado_novo: string; observacao: string | null; created_at: string }[];
   anexos: { id: number; nome_original: string; content_type: string; size: number }[];
   orcamentos: { id: number; versao: number; estado: string; itens: { descricao: string; quantidade: number; preco_unitario: number }[] }[];
+  issues: TicketIssue[];
+  checklist: ChecklistItem[];
 };
 
 type Tecnico = { id: number; name: string };
 
-const ESTADOS = ['aberto', 'em_analise', 'em_curso', 'aguarda_cliente', 'aguarda_peca', 'em_testes', 'resolvido', 'cancelado'];
+const ESTADOS_SEQUENCIA = [
+  { value: 'recebido', label: 'Recebido' },
+  { value: 'em_diagnostico', label: 'Em Diagnóstico' },
+  { value: 'aguarda_pecas', label: 'Aguarda Peças' },
+  { value: 'em_reparacao', label: 'Em Reparação' },
+  { value: 'reparacao_concluida', label: 'Reparação Concluída' },
+  { value: 'pronto_levantamento', label: 'Pronto p/ Levantamento' },
+  { value: 'entregue', label: 'Entregue' },
+] as const;
 
 const SELECT_CLASS =
   'rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-electric-soft';
