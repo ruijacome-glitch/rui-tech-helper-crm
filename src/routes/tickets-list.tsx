@@ -4,6 +4,8 @@ import { Link } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/apiClient';
 import { useAuth } from '@/lib/auth';
 import { TableSkeleton, EmptyState } from '@/components/table/TableParts';
+import { DialogRoot, DialogTrigger, DialogContent } from '@/components/ui/Dialog';
+import { NovaIntervencaoForm } from '@/components/NovaIntervencaoForm';
 
 type TicketRow = {
   id: number;
@@ -43,6 +45,7 @@ const ESTADO_BADGE: Record<string, string> = {
 
 export function TicketsListPage() {
   const { user } = useAuth();
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [estado, setEstado] = useState('');
   const [categoria, setCategoria] = useState('');
   const [prioridade, setPrioridade] = useState('');
@@ -61,7 +64,19 @@ export function TicketsListPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-foreground">Tickets</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-foreground">Tickets</h1>
+        {user?.role === 'admin' && (
+          <DialogRoot open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger className="flex h-11 cursor-pointer items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90">
+              + Nova Intervenção
+            </DialogTrigger>
+            <DialogContent title="Nova Intervenção">
+              <NovaIntervencaoForm onCreated={() => setDialogOpen(false)} />
+            </DialogContent>
+          </DialogRoot>
+        )}
+      </div>
       <div className="mb-6 flex flex-wrap gap-3">
         <select value={estado} onChange={(e) => setEstado(e.target.value)} className={SELECT_CLASS}>
           <option value="">Todos os estados</option>
