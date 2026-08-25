@@ -75,6 +75,8 @@ export function TicketDetailPage() {
   const [showOrcamentoForm, setShowOrcamentoForm] = useState(false);
   const [estadoError, setEstadoError] = useState<string | null>(null);
   const [advancing, setAdvancing] = useState(false);
+  const [atribuindo, setAtribuindo] = useState(false);
+  const [atribuirError, setAtribuirError] = useState<string | null>(null);
 
   const ticketQuery = useQuery({
     queryKey: ['ticket', ticketId],
@@ -98,7 +100,7 @@ export function TicketDetailPage() {
         const body = error.body as { message?: string } | undefined;
         setEstadoError(body?.message ?? 'Não foi possível avançar o estado.');
       } else {
-        throw error;
+        setEstadoError('Erro ao avançar o estado.');
       }
     } finally {
       setAdvancing(false);
@@ -106,8 +108,16 @@ export function TicketDetailPage() {
   }
 
   async function handleAtribuir(tecnicoId: number) {
-    await apiFetch(`/api/admin/tickets/${ticketId}/atribuir`, { method: 'PATCH', body: { tecnico_id: tecnicoId } });
-    queryClient.invalidateQueries({ queryKey: ['ticket', ticketId] });
+    setAtribuirError(null);
+    setAtribuindo(true);
+    try {
+      await apiFetch(`/api/admin/tickets/${ticketId}/atribuir`, { method: 'PATCH', body: { tecnico_id: tecnicoId } });
+      queryClient.invalidateQueries({ queryKey: ['ticket', ticketId] });
+    } catch (error) {
+      setAtribuirError('Erro ao atribuir técnico.');
+    } finally {
+      setAtribuindo(false);
+    }
   }
 
   function invalidateTicket() {
@@ -145,10 +155,17 @@ export function TicketDetailPage() {
 
       {user?.role === 'admin' && (
         <Section title="Atribuir técnico">
-          <select onChange={(e) => e.target.value && handleAtribuir(Number(e.target.value))} defaultValue="" className={SELECT_CLASS}>
+          <select
+            onChange={(e) => e.target.value && handleAtribuir(Number(e.target.value))}
+            defaultValue=""
+            disabled={atribuindo}
+            className={SELECT_CLASS}
+          >
             <option value="" disabled>Selecionar técnico</option>
             {tecnicosQuery.data?.tecnicos.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
           </select>
+          {tecnicosQuery.error && <p role="alert" className="mt-2 text-sm text-destructive">Erro ao carregar técnicos.</p>}
+          {atribuirError && <p role="alert" className="mt-2 text-sm text-destructive">{atribuirError}</p>}
         </Section>
       )}
 
@@ -174,7 +191,7 @@ export function TicketDetailPage() {
         <ul className="flex flex-col gap-2 text-sm text-foreground/80">
           {ticket.eventos.map((evento, i) => (
             <li key={i} className="border-b border-border pb-2 last:border-0">
-              <span className="text-muted-foreground">{evento.created_at}:</span> {evento.estado_anterior} → {evento.estado_novo}
+              <span className="text-muted-foreground">{new Date(evento.created_at).toLocaleDateString('pt-PT')}:</span> {evento.estado_anterior} → {evento.estado_novo}
               {evento.observacao ? ` — ${evento.observacao}` : ''}
             </li>
           ))}
