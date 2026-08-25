@@ -36,23 +36,36 @@ export function IssuesSection({
   const [showForm, setShowForm] = useState(false);
   const [descricao, setDescricao] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [resolvingId, setResolvingId] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleCreate() {
     if (!descricao.trim()) return;
     setSubmitting(true);
+    setError(null);
     try {
       await apiFetch(`${basePath}/tickets/${ticketId}/issues`, { method: 'POST', body: { descricao } });
       setDescricao('');
       setShowForm(false);
       onChanged();
+    } catch {
+      setError('Erro ao adicionar issue.');
     } finally {
       setSubmitting(false);
     }
   }
 
   async function handleResolver(issue: TicketIssue, resultado: 'resolvido' | 'nao_resolvido') {
-    await apiFetch(`${basePath}/tickets/${ticketId}/issues/${issue.id}`, { method: 'PATCH', body: { resultado } });
-    onChanged();
+    setResolvingId(issue.id);
+    setError(null);
+    try {
+      await apiFetch(`${basePath}/tickets/${ticketId}/issues/${issue.id}`, { method: 'PATCH', body: { resultado } });
+      onChanged();
+    } catch {
+      setError('Erro ao atualizar issue.');
+    } finally {
+      setResolvingId(null);
+    }
   }
 
   return (
@@ -65,20 +78,24 @@ export function IssuesSection({
             </span>
             <p className="mt-1.5 text-sm text-foreground">{issue.descricao}</p>
             {issue.resolvido_por && (
-              <p className="mt-0.5 text-xs text-muted-foreground">por {issue.resolvido_por}, {issue.resolvido_at}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                por {issue.resolvido_por}, {issue.resolvido_at ? new Date(issue.resolvido_at).toLocaleDateString('pt-PT') : '—'}
+              </p>
             )}
           </div>
           {issue.resultado === 'pendente' && (
             <div className="flex gap-1.5">
               <button
                 onClick={() => handleResolver(issue, 'resolvido')}
-                className="cursor-pointer rounded-md bg-emerald-500 px-2.5 py-1 text-xs font-medium text-white hover:opacity-90"
+                disabled={resolvingId === issue.id}
+                className="cursor-pointer rounded-md bg-emerald-500 px-2.5 py-1 text-xs font-medium text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Resolvido
               </button>
               <button
                 onClick={() => handleResolver(issue, 'nao_resolvido')}
-                className="cursor-pointer rounded-md bg-destructive px-2.5 py-1 text-xs font-medium text-white hover:opacity-90"
+                disabled={resolvingId === issue.id}
+                className="cursor-pointer rounded-md bg-destructive px-2.5 py-1 text-xs font-medium text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Não resolvido
               </button>
@@ -87,6 +104,7 @@ export function IssuesSection({
         </div>
       ))}
       {issues.length === 0 && <p className="text-sm text-muted-foreground">Sem issues registadas.</p>}
+      {error && <p role="alert" className="mt-2 text-sm text-destructive">{error}</p>}
 
       {!showForm && (
         <button
