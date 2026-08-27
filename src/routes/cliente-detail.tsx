@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/lib/apiClient';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { apiFetch, ApiError } from '@/lib/apiClient';
 import { EmptyState } from '@/components/table/TableParts';
 
 type ClienteDetail = {
@@ -23,16 +23,41 @@ export function ClienteDetailPage() {
     queryFn: () => apiFetch<ClienteDetail>(`/api/admin/clientes/${clienteId}`),
   });
 
+  const reenviarConvite = useMutation({
+    mutationFn: () => apiFetch<{ message: string }>(`/api/admin/clientes/${clienteId}/reenviar-convite`, { method: 'POST' }),
+  });
+
   if (isLoading) return <p className="label-tech text-muted-foreground">A carregar...</p>;
   if (error || !data) return <p role="alert" className="text-sm text-destructive">Erro ao carregar cliente.</p>;
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-foreground">{data.cliente.nome}</h1>
-        <p className="text-sm text-muted-foreground">
-          {[data.cliente.email, data.cliente.telefone, data.cliente.morada, data.cliente.nif].filter(Boolean).join(' · ') || 'Sem dados de contacto.'}
-        </p>
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">{data.cliente.nome}</h1>
+          <p className="text-sm text-muted-foreground">
+            {[data.cliente.email, data.cliente.telefone, data.cliente.morada, data.cliente.nif].filter(Boolean).join(' · ') || 'Sem dados de contacto.'}
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-1">
+          <button
+            type="button"
+            disabled={!data.cliente.email || reenviarConvite.isPending}
+            onClick={() => reenviarConvite.mutate()}
+            title={!data.cliente.email ? 'Cliente sem email definido.' : undefined}
+            className="flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border border-input bg-secondary px-3 text-sm font-medium text-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {reenviarConvite.isPending ? 'A reenviar...' : 'Reenviar convite'}
+          </button>
+          {reenviarConvite.isSuccess && <p className="text-xs text-electric-soft">Convite reenviado.</p>}
+          {reenviarConvite.isError && (
+            <p role="alert" className="text-xs text-destructive">
+              {reenviarConvite.error instanceof ApiError && reenviarConvite.error.status === 422
+                ? 'Cliente sem email definido.'
+                : 'Erro ao reenviar convite.'}
+            </p>
+          )}
+        </div>
       </div>
 
       <div role="tablist" className="mb-6 flex flex-wrap gap-1 border-b border-border">
