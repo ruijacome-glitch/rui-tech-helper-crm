@@ -27,20 +27,20 @@ const SELECT_CLASS =
   'rounded-md border border-input bg-secondary px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-electric-soft';
 
 const PRIORIDADE_BADGE: Record<string, string> = {
-  urgente: 'bg-destructive/15 text-destructive',
-  normal: 'bg-electric/15 text-electric-soft',
-  baixa: 'bg-muted text-muted-foreground',
+  urgente: 'bg-error/15 text-error-soft',
+  normal: 'bg-info/15 text-info-soft',
+  baixa: 'bg-waiting/15 text-waiting-soft',
 };
 
 const ESTADO_BADGE: Record<string, string> = {
-  aberto: 'bg-orange/15 text-orange',
-  em_analise: 'bg-orange/15 text-orange',
-  em_curso: 'bg-electric/15 text-electric-soft',
-  aguarda_cliente: 'bg-muted text-muted-foreground',
-  aguarda_peca: 'bg-muted text-muted-foreground',
-  em_testes: 'bg-electric/15 text-electric-soft',
-  resolvido: 'bg-electric/15 text-electric-soft',
-  cancelado: 'bg-destructive/15 text-destructive',
+  aberto: 'bg-info/15 text-info-soft',
+  em_analise: 'bg-info/15 text-info-soft',
+  em_curso: 'bg-warning/15 text-warning-soft',
+  aguarda_cliente: 'bg-waiting/15 text-waiting-soft',
+  aguarda_peca: 'bg-waiting/15 text-waiting-soft',
+  em_testes: 'bg-warning/15 text-warning-soft',
+  resolvido: 'bg-success/15 text-success-soft',
+  cancelado: 'bg-error/15 text-error-soft',
 };
 
 export function TicketsListPage() {

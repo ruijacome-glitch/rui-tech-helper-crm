@@ -13,14 +13,14 @@ type DashboardData = {
 };
 
 const ESTADO_COLORS: Record<string, string> = {
-  aberto: '#f59e0b',
-  em_analise: '#f59e0b',
-  em_curso: '#38bdf8',
-  aguarda_cliente: '#64748b',
-  aguarda_peca: '#64748b',
-  em_testes: '#38bdf8',
-  resolvido: '#22c55e',
-  cancelado: '#ef4444',
+  aberto: 'var(--color-info)',
+  em_analise: 'var(--color-info)',
+  em_curso: 'var(--color-warning)',
+  aguarda_cliente: 'var(--color-waiting)',
+  aguarda_peca: 'var(--color-waiting)',
+  em_testes: 'var(--color-warning)',
+  resolvido: 'var(--color-success)',
+  cancelado: 'var(--color-error)',
 };
 
 function KpiCard({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
@@ -57,7 +57,7 @@ function Donut({ porEstado }: { porEstado: Record<string, number> }) {
               cy="50"
               r={radius}
               fill="none"
-              stroke={ESTADO_COLORS[estado] ?? '#64748b'}
+              stroke={ESTADO_COLORS[estado] ?? 'var(--color-waiting)'}
               strokeWidth="14"
               strokeDasharray={`${dash} ${circumference - dash}`}
               strokeDashoffset={-offsetAcc}
@@ -70,7 +70,7 @@ function Donut({ porEstado }: { porEstado: Record<string, number> }) {
       <ul className="space-y-1 text-sm">
         {entries.map(([estado, count]) => (
           <li key={estado} className="flex items-center gap-2 text-foreground/80">
-            <span className="size-2.5 rounded-full" style={{ backgroundColor: ESTADO_COLORS[estado] ?? '#64748b' }} />
+            <span className="size-2.5 rounded-full" style={{ backgroundColor: ESTADO_COLORS[estado] ?? 'var(--color-waiting)' }} />
             {estado} ({count})
           </li>
         ))}

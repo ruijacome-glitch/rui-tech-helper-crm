@@ -56,6 +56,9 @@ export function RootLayout() {
             <Link to="/equipamentos" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
               Equipamentos
             </Link>
+            <Link to="/pecas" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
+              Peças e Stock
+            </Link>
             {user.role === 'admin' && (
               <Link to="/faturas" className={NAV_LINK_CLASS} activeProps={{ className: `${NAV_LINK_CLASS} bg-secondary text-foreground` }}>
                 Faturas

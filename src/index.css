@@ -27,6 +27,16 @@
   --color-warm: var(--warm);
   --color-warm-ink: var(--warm-ink);
   --color-steel: var(--steel);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-error: var(--error);
+  --color-error-soft: var(--error-soft);
+  --color-waiting: var(--waiting);
+  --color-waiting-soft: var(--waiting-soft);
   --font-display: "Oswald", "Archivo Narrow", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
@@ -41,6 +51,16 @@
   --warm: oklch(0.955 0.014 85);
   --warm-ink: oklch(0.22 0.02 260);
   --steel: oklch(0.7 0.04 255);
+  --info: #0A52A0;
+  --info-soft: #4C93E8;
+  --success: #17845A;
+  --success-soft: #3FC08C;
+  --warning: #B77B14;
+  --warning-soft: #E0A233;
+  --error: #C23B32;
+  --error-soft: #F0625A;
+  --waiting: #6B778A;
+  --waiting-soft: #94A1B5;
 
   --background: var(--night);
   --foreground: oklch(0.96 0.012 85);

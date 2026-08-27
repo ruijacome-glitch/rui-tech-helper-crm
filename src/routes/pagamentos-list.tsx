@@ -16,10 +16,10 @@ type PagamentosPage = { data: PagamentoRow[] };
 const ESTADOS = ['pendente', 'pago', 'expirado', 'cancelado'];
 
 const ESTADO_BADGE: Record<string, string> = {
-  pendente: 'bg-orange/15 text-orange',
-  pago: 'bg-electric/15 text-electric-soft',
-  expirado: 'bg-muted text-muted-foreground',
-  cancelado: 'bg-destructive/15 text-destructive',
+  pendente: 'bg-waiting/15 text-waiting-soft',
+  pago: 'bg-success/15 text-success-soft',
+  expirado: 'bg-error/15 text-error-soft',
+  cancelado: 'bg-error/15 text-error-soft',
 };
 
 export function PagamentosListPage() {

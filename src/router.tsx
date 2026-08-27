@@ -6,7 +6,12 @@ import { ClientesListPage } from './routes/clientes-list';
 import { ClienteDetailPage } from './routes/cliente-detail';
 import { TicketsListPage } from './routes/tickets-list';
 import { TicketDetailPage } from './routes/ticket-detail';
+import { TicketNovoPage } from './routes/ticket-novo';
 import { PagamentosListPage } from './routes/pagamentos-list';
+import { AgendamentosListPage } from './routes/agendamentos-list';
+import { EquipamentosListPage } from './routes/equipamentos-list';
+import { EquipamentoDetailPage } from './routes/equipamento-detail';
+import { PecasListPage } from './routes/pecas-list';
 import { PlaceholderPage } from './routes/placeholder';
 
 const rootRoute = createRootRoute({ component: RootLayout });
@@ -17,9 +22,12 @@ const clientesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/cli
 const clienteDetailRoute = createRoute({ getParentRoute: () => rootRoute, path: '/clientes/$clienteId', component: ClienteDetailPage });
 const ticketsRoute = createRoute({ getParentRoute: () => rootRoute, path: '/tickets', component: TicketsListPage });
 const ticketDetailRoute = createRoute({ getParentRoute: () => rootRoute, path: '/tickets/$ticketId', component: TicketDetailPage });
+const ticketNovoRoute = createRoute({ getParentRoute: () => rootRoute, path: '/tickets/novo', component: TicketNovoPage });
 const pagamentosRoute = createRoute({ getParentRoute: () => rootRoute, path: '/pagamentos', component: PagamentosListPage });
-const agendamentosRoute = createRoute({ getParentRoute: () => rootRoute, path: '/agendamentos', component: () => <PlaceholderPage titulo="Agendamentos" /> });
-const equipamentosRoute = createRoute({ getParentRoute: () => rootRoute, path: '/equipamentos', component: () => <PlaceholderPage titulo="Equipamentos" /> });
+const agendamentosRoute = createRoute({ getParentRoute: () => rootRoute, path: '/agendamentos', component: AgendamentosListPage });
+const equipamentosRoute = createRoute({ getParentRoute: () => rootRoute, path: '/equipamentos', component: EquipamentosListPage });
+const equipamentoDetailRoute = createRoute({ getParentRoute: () => rootRoute, path: '/equipamentos/$equipamentoId', component: EquipamentoDetailPage });
+const pecasRoute = createRoute({ getParentRoute: () => rootRoute, path: '/pecas', component: PecasListPage });
 const faturasRoute = createRoute({ getParentRoute: () => rootRoute, path: '/faturas', component: () => <PlaceholderPage titulo="Faturas" /> });
 const orcamentosRoute = createRoute({ getParentRoute: () => rootRoute, path: '/orcamentos', component: () => <PlaceholderPage titulo="Orçamentos" /> });
 const comunicacoesRoute = createRoute({ getParentRoute: () => rootRoute, path: '/comunicacoes', component: () => <PlaceholderPage titulo="Comunicações" /> });
@@ -34,9 +42,12 @@ const routeTree = rootRoute.addChildren([
   clienteDetailRoute,
   ticketsRoute,
   ticketDetailRoute,
+  ticketNovoRoute,
   pagamentosRoute,
   agendamentosRoute,
   equipamentosRoute,
+  equipamentoDetailRoute,
+  pecasRoute,
   faturasRoute,
   orcamentosRoute,
   comunicacoesRoute,
