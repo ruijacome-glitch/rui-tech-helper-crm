@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/apiClient';
 import { TableSkeleton, EmptyState } from '@/components/table/TableParts';
+import { DialogRoot, DialogTrigger, DialogContent } from '@/components/ui/Dialog';
+import { NovoClienteForm } from '@/components/NovoClienteForm';
 
 type ClienteRow = {
   id: number;
@@ -16,6 +18,7 @@ type ClientesPage = { data: ClienteRow[]; meta: { current_page: number; last_pag
 
 export function ClientesListPage() {
   const [search, setSearch] = useState('');
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['clientes', search],
@@ -24,7 +27,17 @@ export function ClientesListPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-foreground">Clientes</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-foreground">Clientes</h1>
+        <DialogRoot open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger className="flex h-11 cursor-pointer items-center justify-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90">
+            + Novo Cliente
+          </DialogTrigger>
+          <DialogContent title="Novo Cliente">
+            <NovoClienteForm onCreated={() => setDialogOpen(false)} />
+          </DialogContent>
+        </DialogRoot>
+      </div>
       <input
         type="search"
         aria-label="Pesquisar clientes"
