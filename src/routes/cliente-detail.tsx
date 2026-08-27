@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useParams } from '@tanstack/react-router';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from '@tanstack/react-router';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 import { EmptyState } from '@/components/table/TableParts';
+import { DialogRoot, DialogTrigger, DialogContent } from '@/components/ui/Dialog';
+import { EditarClienteForm } from '@/components/EditarClienteForm';
 
 type ClienteDetail = {
   cliente: { id: number; nome: string; email: string | null; telefone: string | null; morada: string | null; nif: string | null; notas: string | null };
@@ -17,7 +19,10 @@ type Tab = (typeof TABS)[number];
 
 export function ClienteDetailPage() {
   const { clienteId } = useParams({ from: '/clientes/$clienteId' });
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>('Resumo');
+  const [editOpen, setEditOpen] = useState(false);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['cliente', clienteId],
@@ -30,6 +35,28 @@ export function ClienteDetailPage() {
     onError: (err) =>
       toast.error(err instanceof ApiError && err.status === 422 ? 'Cliente sem email definido.' : 'Erro ao reenviar convite.'),
   });
+
+  const apagarCliente = useMutation({
+    mutationFn: () => apiFetch<{ message: string }>(`/api/admin/clientes/${clienteId}`, { method: 'DELETE' }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes'] });
+      toast.success('Cliente apagado.');
+      navigate({ to: '/clientes' });
+    },
+    onError: (err) => {
+      const message =
+        err instanceof ApiError && err.body && typeof err.body === 'object' && 'message' in err.body
+          ? String((err.body as { message: unknown }).message)
+          : 'Erro ao apagar cliente.';
+      toast.error(message);
+    },
+  });
+
+  function handleApagar() {
+    if (window.confirm('Apagar este cliente? Esta acção não pode ser desfeita.')) {
+      apagarCliente.mutate();
+    }
+  }
 
   if (isLoading) return <p className="label-tech text-muted-foreground">A carregar...</p>;
   if (error || !data) return <p role="alert" className="text-sm text-destructive">Erro ao carregar cliente.</p>;
@@ -44,15 +71,33 @@ export function ClienteDetailPage() {
           </p>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <button
-            type="button"
-            disabled={!data.cliente.email || reenviarConvite.isPending}
-            onClick={() => reenviarConvite.mutate()}
-            title={!data.cliente.email ? 'Cliente sem email definido.' : undefined}
-            className="flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border border-input bg-secondary px-3 text-sm font-medium text-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {reenviarConvite.isPending ? 'A reenviar...' : 'Reenviar convite'}
-          </button>
+          <div className="flex gap-2">
+            <DialogRoot open={editOpen} onOpenChange={setEditOpen}>
+              <DialogTrigger className="flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border border-input bg-secondary px-3 text-sm font-medium text-foreground transition-opacity hover:opacity-90">
+                Editar
+              </DialogTrigger>
+              <DialogContent title="Editar cliente">
+                <EditarClienteForm cliente={data.cliente} onSaved={() => setEditOpen(false)} />
+              </DialogContent>
+            </DialogRoot>
+            <button
+              type="button"
+              disabled={!data.cliente.email || reenviarConvite.isPending}
+              onClick={() => reenviarConvite.mutate()}
+              title={!data.cliente.email ? 'Cliente sem email definido.' : undefined}
+              className="flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border border-input bg-secondary px-3 text-sm font-medium text-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {reenviarConvite.isPending ? 'A reenviar...' : 'Reenviar convite'}
+            </button>
+            <button
+              type="button"
+              disabled={apagarCliente.isPending}
+              onClick={handleApagar}
+              className="flex h-9 cursor-pointer items-center justify-center whitespace-nowrap rounded-md border border-destructive/40 bg-secondary px-3 text-sm font-medium text-destructive transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {apagarCliente.isPending ? 'A apagar...' : 'Apagar'}
+            </button>
+          </div>
           {reenviarConvite.isSuccess && <p className="text-xs text-electric-soft">Convite reenviado.</p>}
           {reenviarConvite.isError && (
             <p role="alert" className="text-xs text-destructive">
