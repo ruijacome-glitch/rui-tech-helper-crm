@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams } from '@tanstack/react-router';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 import { EmptyState } from '@/components/table/TableParts';
 
@@ -25,6 +26,9 @@ export function ClienteDetailPage() {
 
   const reenviarConvite = useMutation({
     mutationFn: () => apiFetch<{ message: string }>(`/api/admin/clientes/${clienteId}/reenviar-convite`, { method: 'POST' }),
+    onSuccess: () => toast.success('Convite reenviado.'),
+    onError: (err) =>
+      toast.error(err instanceof ApiError && err.status === 422 ? 'Cliente sem email definido.' : 'Erro ao reenviar convite.'),
   });
 
   if (isLoading) return <p className="label-tech text-muted-foreground">A carregar...</p>;

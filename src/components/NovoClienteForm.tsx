@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 
 type FieldErrors = Record<string, string[]>;
@@ -37,6 +38,7 @@ export function NovoClienteForm({ onCreated }: { onCreated: () => void }) {
         },
       });
       queryClient.invalidateQueries({ queryKey: ['clientes'] });
+      toast.success('Cliente criado. Convite enviado por email.');
       onCreated();
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -44,6 +46,7 @@ export function NovoClienteForm({ onCreated }: { onCreated: () => void }) {
         setFieldErrors(body.errors ?? {});
       } else {
         setGenericError('Erro ao criar cliente. Tenta novamente.');
+        toast.error('Erro ao criar cliente. Tenta novamente.');
       }
     } finally {
       setSubmitting(false);

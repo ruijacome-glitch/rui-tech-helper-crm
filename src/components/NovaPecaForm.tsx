@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 
 type FieldErrors = Record<string, string[]>;
@@ -43,6 +44,7 @@ export function NovaPecaForm({ onCreated }: { onCreated: () => void }) {
         },
       });
       queryClient.invalidateQueries({ queryKey: ['pecas'] });
+      toast.success('Peça criada.');
       onCreated();
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -50,6 +52,7 @@ export function NovaPecaForm({ onCreated }: { onCreated: () => void }) {
         setFieldErrors(body.errors ?? {});
       } else {
         setGenericError('Erro ao criar peça. Tenta novamente.');
+        toast.error('Erro ao criar peça. Tenta novamente.');
       }
     } finally {
       setSubmitting(false);

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 import { ClienteCombobox } from './ClienteCombobox';
 import { TecnicoCombobox } from './TecnicoCombobox';
@@ -50,6 +51,7 @@ export function NovaIntervencaoForm({ onCreated }: { onCreated: () => void }) {
         },
       });
       queryClient.invalidateQueries({ queryKey: ['tickets'] });
+      toast.success('Intervenção criada.');
       onCreated();
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -57,6 +59,7 @@ export function NovaIntervencaoForm({ onCreated }: { onCreated: () => void }) {
         setFieldErrors(body.errors ?? {});
       } else {
         setGenericError('Erro ao criar intervenção. Tenta novamente.');
+        toast.error('Erro ao criar intervenção. Tenta novamente.');
       }
     } finally {
       setSubmitting(false);

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 import { ClienteCombobox } from './ClienteCombobox';
 
@@ -47,6 +48,7 @@ export function NovoEquipamentoForm({ onCreated }: { onCreated: () => void }) {
         },
       });
       queryClient.invalidateQueries({ queryKey: ['equipamentos'] });
+      toast.success('Equipamento criado.');
       onCreated();
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -54,6 +56,7 @@ export function NovoEquipamentoForm({ onCreated }: { onCreated: () => void }) {
         setFieldErrors(body.errors ?? {});
       } else {
         setGenericError('Erro ao criar equipamento. Tenta novamente.');
+        toast.error('Erro ao criar equipamento. Tenta novamente.');
       }
     } finally {
       setSubmitting(false);

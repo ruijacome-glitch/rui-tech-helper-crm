@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiFetch, ApiError } from '@/lib/apiClient';
 import { ClienteCombobox } from './ClienteCombobox';
 import { TecnicoCombobox } from './TecnicoCombobox';
@@ -45,6 +46,7 @@ export function NovoAgendamentoForm({ onCreated }: { onCreated: () => void }) {
         },
       });
       queryClient.invalidateQueries({ queryKey: ['agendamentos'] });
+      toast.success('Agendamento criado.');
       onCreated();
     } catch (err) {
       if (err instanceof ApiError && err.status === 422) {
@@ -52,6 +54,7 @@ export function NovoAgendamentoForm({ onCreated }: { onCreated: () => void }) {
         setFieldErrors(body.errors ?? {});
       } else {
         setGenericError('Erro ao criar agendamento. Tenta novamente.');
+        toast.error('Erro ao criar agendamento. Tenta novamente.');
       }
     } finally {
       setSubmitting(false);
